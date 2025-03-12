@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "YAML Validation Schema",
+  "description": "Schema for validating YAML configuration files",
+  "type": "object",
+  "properties": {
+    "app_name": {
+      "type": "string",
+      "description": "Name of the application",
+      "minLength": 3,
+      "maxLength": 50
+    },
+    "version": {
+      "type": "string",
+      "description": "Semantic version of the application",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "Flag to enable or disable the application"
+    },
+    "max_users": {
+      "type": "integer",
+      "description": "Maximum number of users allowed",
+      "minimum": 1,
+      "maximum": 1000
+    },
+    "database": {
+      "type": "object",
+      "description": "Database configuration settings",
+      "properties": {
+        "host": {
+          "type": "string",
+          "format": "hostname"
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 1024,
+          "maximum": 65535
+        },
+        "username": {
+          "type": "string",
+          "minLength": 3
+        },
+        "password": {
+          "type": "string",
+          "minLength": 8
+        },
+        "ssl_enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": ["host", "port", "username", "password"]
+    },
+    "allowed_ips": {
+      "type": "array",
+      "description": "List of allowed IP addresses",
+      "items": {
+        "type": "string",
+        "format": "ipv4"
+      },
+      "minItems": 1
+    },
+    "logging": {
+      "type": "object",
+      "description": "Logging configuration",
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+        },
+        "file": {
+          "type": "string",
+          "pattern": "^.*\\.log$"
+        }
+      },
+      "required": ["level"]
+    },
+    "features": {
+      "type": "array",
+      "description": "List of enabled features",
+      "items": {
+        "type": "string",
+        "enum": ["search", "analytics", "reporting", "notifications"]
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "description": "Creation timestamp",
+      "format": "date-time"
+    }
+  },
+  "required": ["app_name", "version", "enabled", "database"]
+}
